@@ -2,6 +2,8 @@
 
 This project is a sportswear e-commerce website built using Node.js, Express.js, and MongoDB. It provides various features for users and administrators, including user authentication, product search, shopping cart management, and order management.
 
+Video demo https://drive.google.com/file/d/1YEdT5LJxSTzIASHHd955ujQM-W1WMTFi/view
+
 ## Table of Contents
 
 - [Features](#features)
