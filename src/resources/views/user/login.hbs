@@ -1,0 +1,37 @@
+
+<form action="/api/auth/login" method="POST">
+    <div class="container mt-4">
+        <h3>Đăng nhập</h3>
+        <div class="row mb-3">
+            <div class="col col-lg-6 ">
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+                    class="img-fluid" alt="img">
+            </div>
+            <div class=" col col-lg-6">
+                <div class="form-group mt-1">
+                    <label for="email">Địa chỉ email:</label>
+                    <input class="form-control w-75" type="email" name="email" id="email" required />
+                </div>
+                <div class="form-group mt-2">
+                    <label for="password">Mật khẩu</label>
+                    <input class="form-control w-75" type="password" name="password" id="password" required>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div class="form-check mb-0">
+                        <input class="form-check-input me-2" type="checkbox" value="" id="loginCheckbox" />
+                        <label class="form-check-label" for="loginCheckbox">
+                            Ghi nhớ đăng nhập
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-4">Đăng nhập</button>
+                <div class="text-center text-lg-start">
+                    <p class="fw-bold mt-2 pt-1 mb-0">
+                        Chưa có tài khoản? <a href="/user/register" class="link">Đăng ký</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

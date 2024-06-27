@@ -1,0 +1,22 @@
+<div class="container">
+    <h2 class='mt-4'>Thêm sản phẩm mới</h2>
+    <form method='POST' action='/shirts/store'>
+        <div class='form-group'>
+            <label for='name'>Tên sản phẩm:</label>
+            <input type='text' class='form-control' id='name' name='name' />
+        </div>
+        <div class='form-group'>
+            <label for='description'>Thông tin mô tả:</label>
+            <input type='text' class='form-control' id='description' name='description' />
+        </div>
+        <div class='form-group'>
+            <label for='price'>Giá:</label>
+            <input type='text' class='form-control' id='price' name='price' />
+        </div>
+        <div class='form-group'>
+            <label for='image'>Hình ảnh:</label>
+            <input type='text' class='form-control' id='image' name='image' />
+        </div>
+        <button type='submit' class='btn btn-primary mt-4'>Thêm</button>
+    </form>
+</div>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+  <nav class='navbar navbar-expand-lg bg-dark-subtle'>
+    <div class='container'>
+      <a class='navbar-brand' href='/'>Home</a>
+
+      <form class="d-flex form-inline me-4" action="search-product" method="GET">
+        <input class="form-control mr-sm-2 me-1" type="search" name="query" placeholder="Real madrid"
+          aria-label="Search">
+        <button class="btn btn-sm btn-outline-success my-2 my-sm-0 w-50" type="submit">Tìm kiếm</button>
+      </form>
+
+      <button class='navbar-toggler' type='button' data-bs-toggle='collapse' data-bs-target='#navbarSupportedContent'
+        aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation'>
+        <span class='navbar-toggler-icon'></span>
+      </button>
+
+      <div class='collapse navbar-collapse' id='navbarSupportedContent'>
+        <ul class='navbar-nav ms-auto mb-2 mb-lg-0'>
+          <li class="nav-item">
+            {{#if (eq user.role 'admin')}}
+            <a class='navbar-brand' href='/cart'>
+              <i class="fa-solid fa-cart-shopping" hidden></i>
+            </a>
+            {{else}}
+            <a class='navbar-brand' href='/cart'>
+              <i class="fa-solid fa-cart-shopping"></i>
+            </a>
+            {{/if}}
+          </li>
+          {{#if user}}
+          <li class='nav-item dropdown'>
+            <a class='nav-link dropdown-toggle' href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false'>
+              <img src='https://i.kym-cdn.com/photos/images/original/001/915/448/8fa.png' alt='' class='user-avatar' />
+              {{user.username}}
+            </a>
+            <ul class='dropdown-menu'>
+              {{#if (eq user.role 'admin')}}
+              <li><a class='dropdown-item' href='/shirts/create'>Thêm sản phẩm</a></li>
+              <li><a class='dropdown-item' href='/admin/stored/shirts'>Sản phẩm hiện có</a></li>
+              <li><a class='dropdown-item' href='/admin/orders'>Quản lý đơn đặt hàng</a></li>
+              {{/if}}
+              <li>
+                <hr class='dropdown-divider' />
+              </li>
+              <li><a class='dropdown-item' href='/user/logout'>Đăng xuất</a></li>
+            </ul>
+          </li>
+          {{else}}
+          <li class="nav-item">
+            <a class='navbar-brand' style="font-size: 18px" href='/user/login'>Đăng nhập</a>
+          </li>
+          <li class="nav-item">
+            <a class='navbar-brand' style="font-size: 18px" href='/user/register'>Đăng ký</a>
+          </li>
+          {{/if}}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <style>
+    .user-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      margin-right: 4px;
+    }
+  </style>
+
+</body>
+
+</html>

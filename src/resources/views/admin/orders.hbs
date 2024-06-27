@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý đơn đặt</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+    <div class="container mt-4">
+        <h3>Các đơn đặt hàng</h3>
+        {{#if orders.length}}
+        <table class="table mt-4">
+            <thead>
+                <tr>
+                    <th scope="col">ID đơn hàng</th>
+                    <th scope="col">Người dùng</th>
+                    <th scope="col">Hình ảnh</th>
+                    <th scope="col">Tổng giá</th>
+                    <th scope="col">Trạng thái</th>
+                    <th scope="col">Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each orders}}
+                <tr>
+                    <th scope="row">{{this._id}}</th>
+                    <td>{{this.user.username}}</td>
+                    <td>
+                        {{#if this.image}}
+                        <img src="{{this.image}}" alt="Order Image" style="width:80px; height:auto;">
+                        {{else}}
+                        <p>Không có hình ảnh</p>
+                        {{/if}}
+                    </td>
+                    <td>{{formatCurrency this.totalAmount}}</td>
+                    <td>{{this.status}}</td>
+                    <td>
+                        <button class="btn btn-info" onclick="showDetails('{{this._id}}')">Xem/Sửa</button>
+                        <button class="btn btn-danger" onclick="deleteOrder('{{this._id}}')">Xóa</button>
+                        {{#if (ne this.status 'Đã giao hàng')}}
+                        <button class="btn btn-success" onclick="markAsDelivered('{{this._id}}')">Xác nhận giao
+                            hàng</button>
+                        {{/if}}
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        {{else}}
+        <p>Hiện không có đơn đặt hàng nào.</p>
+        {{/if}}
+
+        <div id="order-details" style="display:none;">
+            <h3>Chi tiết đơn đặt</h3>
+            <p><strong>ID đơn đặt:</strong> <span id="order-id"></span></p>
+            <p><strong>Người dùng:</strong> <span id="order-user"></span></p>
+            <p><strong>Tổng đơn giá:</strong> <span id="order-total"></span></p>
+            <p><strong>Trạng thái:</strong> <span id="order-status"></span></p>
+            <h3>Các sản phẩm</h3>
+            <ul id="order-products"></ul>
+            <h3>Chỉnh sửa trạng thái</h3>
+            <form id="edit-status-form">
+                <label for="status">Trạng thái:</label>
+                <select name="status" id="edit-status">
+                    <option value="Chưa xử lý">Chưa xử lý</option>
+                    <option value="Đã xử lý">Đã xử lý</option>
+                    <option value="Đã vận chuyển">Đã vận chuyển</option>
+                    <option value="Đã giao hàng">Đã giao hàng</option>
+                    <option value="Đã hủy">Đã hủy</option>
+                </select>
+                <button type="submit" class="btn btn-primary mt-2">Cập nhật trạng thái</button>
+            </form>
+            <button class="btn btn-secondary mt-2" onclick="hideDetails()">Đóng</button>
+        </div>
+    </div>
+    <script>
+        function showDetails(orderId) {
+            $.ajax({
+                url: '/admin/orders/' + orderId,
+                method: 'GET',
+                success: function (order) {
+                    $('#order-id').text(order._id);
+                    $('#order-user').text(order.user.username);
+                    $('#order-total').text(formatCurrency(order.totalAmount));
+                    $('#order-status').text(order.status);
+                    $('#edit-status').val(order.status);
+                    const productsList = $('#order-products');
+                    productsList.empty();
+                    order.products.forEach(product => {
+                        productsList.append('<li>' + product.product.name + ' (Size: ' + product.size + ', Số lượng: ' + product.quantity + ')</li>'); // Sửa đổi để hiển thị size
+                    });
+                    $('#order-details').show();
+                },
+                error: function (error) {
+                    alert('Không tìm thấy chi tiết đơn đặt hàng: ' + error.responseText);
+                }
+            });
+        }
+
+        function hideDetails() {
+            $('#order-details').hide();
+        }
+
+        $('#edit-status-form').submit(function (event) {
+            event.preventDefault();
+            const orderId = $('#order-id').text();
+            const status = $('#edit-status').val();
+            const size = ''; // Chỉnh sửa để lấy size từ form HTML
+            $.ajax({
+                url: '/admin/orders/' + orderId + '/update',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ status, size }),
+                success: function (order) {
+                    alert('Trạng thái đơn hàng được cập nhật thành ' + order.status);
+                    location.reload();
+                },
+                error: function (error) {
+                    alert('Không cập nhật được trạng thái đơn hàng: ' + error.responseText);
+                }
+            });
+        });
+
+        function deleteOrder(orderId) {
+            if (confirm('Xác nhận xóa đơn hàng này?')) {
+                $.ajax({
+                    url: '/admin/orders/' + orderId + '/delete',
+                    method: 'POST',
+                    success: function () {
+                        alert('Đơn hàng đã được xóa thành công');
+                        location.reload();
+                    },
+                    error: function (error) {
+                        alert('Không thể xóa đơn hàng: ' + error.responseText);
+                    }
+                });
+            }
+        }
+
+        function markAsDelivered(orderId) {
+            if (confirm('Xác nhận vận chuyển đơn hàng?')) {
+                $.ajax({
+                    url: '/admin/orders/' + orderId + '/update',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ status: 'Đã giao hàng' }),
+                    success: function (order) {
+                        alert('Đơn hàng đã được giao');
+                        location.reload();
+                    },
+                    error: function (error) {
+                        alert('Không cập nhật được trạng thái đơn hàng: ' + error.responseText);
+                    }
+                });
+            }
+        }
+
+        function formatCurrency(value) {
+            const number = parseFloat(value);
+            if (isNaN(number)) {
+                return 'Lỗi định dạng';
+            }
+            return number.toLocaleString('vi-VN') + '.000' + ' VNĐ';
+        }
+    </script>
+</body>
+
+</html>

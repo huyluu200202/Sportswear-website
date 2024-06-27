@@ -1,0 +1,177 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<section id="home">
+    <div class="image-feature left-to-right show-on-scroll thumbnail-animation">
+        <div class="list-image">
+            <img src="https://store3.fanatics-intl.com/content/ws/all/47d17bd4-37ef-4b5a-a0b1-ce1e3794f8df__1600X850.png"
+                alt="" class="img-fluid img-thumbnail">
+            <img hidden
+                src="https://store3.fanatics-intl.com/content/ws/all/ee70ad79-2404-4b73-86c3-33e4ae7b2ba7__1600X850.png"
+                alt="" class="img-fluid img-thumbnail">
+            <img hidden
+                src="https://store3.fanatics-intl.com/content/ws/all/1de5986e-da48-46ce-a643-51312c0971a2__1600X850.png"
+                alt="" class="img-fluid img-thumbnail">
+        </div>
+        <div class="control previous">
+            <i class="fa-solid fa-angles-left"></i>
+        </div>
+        <div class="control next">
+            <i class="fa-solid fa-angles-right"></i>
+        </div>
+    </div>
+</section>
+
+<div class='container mt-4'>
+    <div class='row d-flex flex-wrap'>
+        {{#each shirts}}
+        <div class='col-sm-3 d-flex mb-4 show-on-scroll zoom'>
+            <div class='card' style='width: 18rem;'>
+                <a href='/shirts/{{this.slug}}'>
+                    <img src='{{this.image}}' class='card-img-top' alt='...' />
+                </a>
+                <div class='card-body d-flex flex-column'>
+                    <a href='/shirts/{{this.slug}}'>
+                        <h5 class='card-title'>{{this.name}}</h5>
+                    </a>
+                    <p class='card-text'>{{this.description}}</p>
+                    <p class='card-text'>{{this.price}}</p>
+                    <a href='/shirts/{{this.slug}}' class='btn btn-primary mt-auto w-100'>Chi tiết</a>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div>
+
+<style>
+    #home {
+        position: relative;
+    }
+
+    .control {
+        display: flex;
+        align-items: center;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 30px;
+        color: white;
+        cursor: pointer;
+    }
+
+    .previous {
+        left: 10px;
+    }
+
+    .next {
+        right: 10px;
+    }
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        overflow: hidden;
+    }
+
+    .card-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .btn-primary {
+        align-self: flex-end;
+    }
+
+    .left-to-right {
+        transform: translateX(-200%);
+        transition: 1s;
+    }
+
+    .left-to-right.start {
+        transform: translateX(0);
+    }
+
+    .right-to-left {
+        transform: translateX(200%);
+        transition: 1s;
+    }
+
+    .right-to-left.start {
+        transform: translateX(0);
+    }
+
+    .zoom {
+        transform: scale(0);
+    }
+
+    .zoom.start {
+        transform: scale(1);
+        transition: 1s;
+    }
+</style>
+
+<script>
+    var listImg = document.querySelectorAll('.list-image img');
+    var prevBtn = document.querySelector('.previous');
+    var nextBtn = document.querySelector('.next');
+    var animationElements = document.querySelectorAll('.show-on-scroll');
+
+    var currentIndex = 0;
+
+    function updateImageByIndex(index) {
+        listImg.forEach((img, i) => {
+            img.hidden = i !== index;
+        });
+        currentIndex = index;
+    }
+
+    listImg.forEach((img, index) => {
+        img.addEventListener('click', e => {
+            updateImageByIndex(index);
+        });
+    });
+
+    prevBtn.addEventListener('click', e => {
+        if (currentIndex === 0) {
+            currentIndex = listImg.length - 1;
+        } else {
+            currentIndex--;
+        }
+        updateImageByIndex(currentIndex);
+    });
+
+    nextBtn.addEventListener('click', e => {
+        if (currentIndex === listImg.length - 1) {
+            currentIndex = 0;
+        } else {
+            currentIndex++;
+        }
+        updateImageByIndex(currentIndex);
+    });
+
+    updateImageByIndex(0);
+
+    function toggleAnimationElement(element) {
+        var rect = element.getClientRects()[0];
+        var heightScreen = window.innerHeight;
+
+        if (!(rect.bottom < 0 || rect.top > heightScreen)) {
+            element.classList.add('start');
+        } else {
+            element.classList.remove('start');
+        }
+    }
+
+    function checkAnimation() {
+        animationElements.forEach(el => {
+            toggleAnimationElement(el);
+        });
+    }
+
+    window.onscroll = checkAnimation;
+
+</script>

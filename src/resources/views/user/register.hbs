@@ -1,0 +1,63 @@
+
+<div class="container mt-4">
+    <h3>Đăng ký</h3>
+    <form action="/api/auth/register" method="POST">
+        <div class="row">
+            <div class="col col-lg-6 ">
+                <div class="form-group mt-2">
+                    <div class="d-flex flex-row align-items-center">
+                        <i class="fas fa-user fa-lg me-3 fa-fw mt-4"></i>
+                        <div class="form-outline flex-fill mb-0">
+                            <label for="username">Tên người dùng:</label>
+                            <input class="form-control w-75" type="text" name="username" id="username" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mt-2">
+                    <div class="d-flex flex-row align-items-center">
+                        <i class="fas text-body fa-envelope fa-lg me-3 fa-fw mt-4"></i>
+                        <div class="form-outline flex-fill mb-0">
+                            <label for="email">Email:</label>
+                            <input class="form-control w-75" type="email" name="email" id="email" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mt-2">
+                    <div class="d-flex flex-row align-items-center">
+                        <i class="fas text-body fa-lock fa-lg me-3 fa-fw mt-4"></i>
+                        <div class="form-outline flex-fill mb-0">
+                            <label for="password">Mật khẩu:</label>
+                            <input class="form-control w-75" type="password" name="password" id="password" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mt-2">
+                    <div class="d-flex flex-row align-items-center">
+                        <i class="fas fa-key fa-lg me-3 fa-fw mt-4"></i>
+                        <div class="form-outline flex-fill mb-0">
+                            <label for="confirmPassword">Nhập lại mật khẩu:</label>
+                            <input class="form-control w-75" type="password" name="confirmPassword" id="confirmPassword"
+                                required>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-check d-flex justify-content-start mt-2">
+                    <input class="form-check-input me-2" type="checkbox" value="" id="service" />
+                    <label class="form-check-label" for="service">
+                        Đồng ý về <a href="#!">Điều khoản và dịch vụ</a>
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-primary mt-4">Đăng ký</button>
+                <div class="text-center text-lg-start mb-4">
+                    <p class="fw-bold mt-2 pt-1 mb-0">
+                        Đã có tài khoản? <a href="/user/login" class="link">Đăng nhập</a>
+                    </p>
+                </div>
+            </div>
+            <div class="col col-lg-6 ">
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
+                    class="img-fluid" alt="img">
+            </div>
+        </div>
+    </form>
+</div>

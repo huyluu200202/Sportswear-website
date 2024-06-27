@@ -1,0 +1,22 @@
+<div class="container">
+    <h2 class='mt-4'>Cập nhật thông tin sản phẩm</h2>
+    <form method='POST' action='/shirts/{{shirt._id}}?_method=PUT'>
+        <div class='form-group'>
+            <label for='name'>Tên sản phẩm:</label>
+            <input type='text' class='form-control' value='{{shirt.name}}' id='name' name='name' />
+        </div>
+        <div class='form-group'>
+            <label for='description'>Thông tin mô tả:</label>
+            <textarea class='form-control' value='' name='description' id='description'>{{shirt.description}}</textarea>
+        </div>
+        <div class='form-group'>
+            <label for='price'>Giá:</label>
+            <input type='text' class='form-control' value='{{shirt.price}}' id='price' name='price' />
+        </div>
+        <div class='form-group'>
+            <label for='image'>Hình ảnh:</label>
+            <input type='text' class='form-control' value='{{shirt.image}}' id='image' name='image' />
+        </div>
+        <button type='submit' class='btn btn-primary mt-4'>Lưu</button>
+    </form>
+</div>

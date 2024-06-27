@@ -1,0 +1,162 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+    integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<form id="container-form" class="container" method="POST" action="/shirts/handle-form-actions">
+    <div>
+        <h2 class='mt-4'>Sản phẩm hiện có</h2>
+        <div class="d-flex justify-content-between">
+            <a href='/admin/trash/shirts' class="text-left"><i class='fa-solid fa-trash'
+                    style='font-size: 18px;'>({{deletedCount}})</i></a>
+            <a href="/shirts/create" class="text-right">Thêm sản phẩm</a>
+        </div>
+        <div class="mt-4 d-flex align-items-center">
+            <div class="me-2 form-check">
+                <input class="form-check-input" type="checkbox" value="" id="checkbox-all">
+                <label class="form-check-label" for="checkbox-all">
+                    Chọn tất cả
+                </label>
+            </div>
+            <select class="me-2 form-select form-select-sm list-check" name="action" required="required">
+                <option value="">--Hành động--</option>
+                <option value="delete">Xóa</option>
+            </select>
+            <button class="me-2 btn btn-primary check-all-submit-btn btn-sm disabled">Thực hiện</button>
+        </div>
+    </div>
+
+    <table class='table mt-4'>
+        <thead>
+            <tr>
+                <th></th>
+                <th scope='col'>ID</th>
+                <th scope='col'>
+                    Tên SP
+                    {{{sortable 'name' _sort}}}
+                </th>
+                <th scope='col'>
+                    Giá
+                    {{{sortable 'price' _sort}}}
+                </th>
+                <th scope='col'>Hình ảnh</th>
+                <th scope='col'>
+                    Thời gian tạo
+                    {{{sortable 'createdAt' _sort}}}
+                </th>
+                <th scope='col'></th>
+                <th scope='col'></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each shirts}}
+            <tr>
+                <td>
+                    <div class="me-2 form-check">
+                        <input class="form-check-input" type="checkbox" name="shirtIds[]" value="{{this._id}}">
+                    </div>
+                </td>
+                <th scope='row'>{{this._id}}</th>
+                <td>{{this.name}}</td>
+                <td>{{this.price}}</td>
+                <td><img src='{{this.image}}' alt='{{this.name}}' style='width: 80px; height: auto;' /></td>
+                <td>{{this.createdAt}}</td>
+                <td><a href='/shirts/{{this._id}}/edit' class='btn btn-primary'>Sửa</a></td>
+                <td><a href='#' class='btn btn-danger' data-bs-toggle='modal' data-id='{{this._id}}'
+                        data-bs-target='#delete-shirt'>Xóa</a></td>
+            </tr>
+            {{else}}
+            <tr>
+                <td class='text-center' colspan='5'>
+                    Bạn chưa thêm sản phẩm nào.
+                    <a href='/shirts/create'>Thêm sản phẩm mới</a>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+    {{! Modal delete product }}
+    <div id='delete-shirt' class='modal' tabindex='-1'>
+        <div class='modal-dialog'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <h5 class='modal-title'>Xóa sản phẩm?</h5>
+                    <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+                </div>
+                <div class='modal-body'>
+                    <p>Bạn chắc muốn xóa sản phẩm này?</p>
+                </div>
+                <div class='modal-footer'>
+                    <button id='btn-delete-shirt' type='button' class='btn btn-danger'>Xóa</button>
+                    <button type='button' class='btn btn-primary' data-bs-dismiss='modal'>Hủy</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+{{! Delete form }}
+<form name='delete-shirt-form' method='POST'></form>
+
+<style>
+    .list-check {
+        width: 140px;
+    }
+</style>
+
+<script>
+    var shirtId;
+    var deleteModal = document.getElementById('delete-shirt');
+    var btnDelete = document.getElementById('btn-delete-shirt');
+    var deleteForm = document.forms['delete-shirt-form'];
+    var checkboxAll = $('#checkbox-all');
+    var shirtItemCheck = $('input[name="shirtIds[]"]')
+    var checkAllSubmitBtn = $('.check-all-submit-btn');
+    var containerForm = $('#container-form');
+
+    if (deleteModal) {
+        deleteModal.addEventListener('show.bs.modal', () => {
+            var button = event.relatedTarget; shirtId = button.getAttribute('data-id');
+        });
+    }
+    btnDelete.addEventListener('click', () => {
+        deleteForm.action = '/shirts/' + shirtId + '?_method=DELETE';
+        deleteForm.submit();
+    });
+
+    // Check all submit button
+    checkAllSubmitBtn.on('submit', function (e) {
+        var isSubmitable = !$(this).hasClass('disabled');
+        if (!isSubmitable) {
+            e.preventDefault();
+        }
+    });
+
+    // Checkbox all
+    checkboxAll.change(function () {
+        var isCheckedAll = $(this).prop('checked');
+        shirtItemCheck.prop('checked', isCheckedAll);
+        renderCheckAllSubmitBtn();
+    })
+
+    // Shirt item changed
+    shirtItemCheck.change(function () {
+        var isCheckedAll = shirtItemCheck.length === $('input[name="shirtIds[]"]:checked').length;
+        checkboxAll.prop('checked', isCheckedAll);
+        renderCheckAllSubmitBtn();
+    })
+
+    // Re-render check all submit button
+    function renderCheckAllSubmitBtn() {
+        var checkedCount = $('input[name="shirtIds[]"]:checked').length;
+
+        if (checkedCount) {
+            checkAllSubmitBtn.removeClass('disabled');
+        } else {
+            checkAllSubmitBtn.addClass('disabled');
+        }
+    }
+</script>
