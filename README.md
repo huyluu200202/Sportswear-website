@@ -13,7 +13,6 @@ Video demo https://drive.google.com/file/d/1YEdT5LJxSTzIASHHd955ujQM-W1WMTFi/vie
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
   - [First-Time Setup](#first-time-setup)
-- [License](#license)
 
 ## Features
 
