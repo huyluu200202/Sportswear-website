@@ -21,4 +21,11 @@ router.get('/logout', (req, res) => {
   res.redirect('/');
 });
 
+// Display user info update page
+router.get('/userinfo', auth, (req, res) => userController.userInfo(req, res));
+
+// Handle user info update
+router.put('/:id', auth, (req, res) => userController.updateUser(req, res));
+
+
 module.exports = router;

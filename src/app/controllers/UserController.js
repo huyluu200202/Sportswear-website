@@ -122,6 +122,58 @@ class UserController {
       res.status(500).send('Server error');
     }
   }
+
+  // Display user info update page
+  async userInfo(req, res, next) {
+    try {
+      const user = await User.findById(req.user.id).select('-password');
+      res.render('user/userinfo', { user });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server error');
+    }
+  }
+
+  // Handle user info update
+  async updateUser(req, res, next) {
+    const { username, currentPassword, password, confirmPassword } = req.body;
+
+    // Check if passwords match
+    if (password !== confirmPassword) {
+      return res.status(400).json({ msg: 'Mật khẩu nhập lại không khớp' });
+    }
+
+    try {
+      // Check if the user exists
+      let user = await User.findById(req.user.id);
+      if (!user) {
+        return res.status(404).json({ msg: 'Người dùng không tồn tại' });
+      }
+
+      // Verify the current password
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ msg: 'Mật khẩu hiện tại không chính xác' });
+      }
+
+      // Update user details
+      user.username = username || user.username;
+
+      // Hash the new password before saving to the database
+      if (password) {
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(password, salt);
+      }
+
+      await user.save();
+
+      res.redirect('/user/userinfo');
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server error');
+    }
+  }
+
 }
 
 module.exports = new UserController();
