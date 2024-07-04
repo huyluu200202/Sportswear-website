@@ -33,7 +33,7 @@ class UserController {
       // Check if the user already exists
       let user = await User.findOne({ email });
       if (user) {
-        return res.status(400).json({ msg: 'Người dùng đã tồn tại' });
+        return res.status(400).json({ msg: 'Email người dùng đã tồn tại' });
       }
 
       // Check if any users exist to determine the role

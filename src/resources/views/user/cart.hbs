@@ -140,7 +140,7 @@
         async function orderProduct(productId) {
             try {
                 // Lấy size từ DOM (ví dụ: dùng selector .selected-size)
-                const size = document.querySelector('.selected-size').textContent; // hoặc innerText tuỳ vào cách bạn hiển thị size
+                const size = document.querySelector('.selected-size').textContent; // hoặc innerText 
 
                 const response = await fetch('/cart/order', {
                     method: 'POST',
