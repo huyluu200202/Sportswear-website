@@ -108,10 +108,9 @@
         }
 
         function confirmDelete(productId) {
-            if (productId) {
-                confirm('Xác nhận xóa sản phẩm này?')
+            if (confirm('Xác nhận xóa sản phẩm này?')) {
+                removeProduct(productId);
             }
-            removeProduct(productId);
         }
 
         async function removeProduct(productId) {
@@ -159,7 +158,7 @@
                 alert('Đặt hàng thành công');
                 location.reload();
                 updateCartDisplay(cart);
-                
+
                 //updateSizeDisplay(productId, cart);
             } catch (error) {
                 console.error('Không thể đặt hàng:', error);
